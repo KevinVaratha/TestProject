@@ -1,0 +1,88 @@
+﻿@model List<Test.Models.Employee>
+@{
+    ViewBag.Title = "Index";
+    Test.Models.Employee employee = new Test.Models.Employee();
+}
+
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+    .height {
+        background-color: white;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".btn[data-target='#myModal']").click(function () {
+            debugger;
+            var columnHeadings = $("thead th").map(function () {
+                return $(this).text();
+            }).get();
+            columnHeadings.pop();
+            var columnValues = $(this).parent().siblings().map(function () {
+                return $(this).text();
+            }).get();
+            var modalBody = $('<div id="modalContent"></div>');
+            var modalForm = $('<form role="form" name="modalForm" action="putYourPHPActionHere.php" method="post"></form>');
+            $.each(columnHeadings, function (i, columnHeader) {
+                debugger;
+                var formGroup = $('<div class="form-group"></div>');
+                formGroup.append('<label for="' + columnHeader + '">' + columnHeader + '</label>');
+                formGroup.append('<input class="form-control" name="' + columnHeader + i + '" id="' + columnHeader + i + '" value="' + columnValues[i] + '" />');
+                modalForm.append(formGroup);
+            });
+            modalBody.append(modalForm);
+            $('.modal-body').html(modalBody);
+        });
+        $('.modal-footer .btn-primary').click(function () {
+            $('form[name="modalForm"]').submit();
+        });
+    });
+
+
+
+</script>
+<div class="container">
+    <h2>Employee Management</h2>
+    <div id="alert">
+        <h4>
+            @ViewBag.alert
+        </h4>
+    </div>
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+    <div id="load">
+        @Html.Partial("_Employeelist", Model)
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                @Html.Action("AddMember", "Employee")
+                @*@Html.Partial("_Add_Update", employee)*@
+            </div>
+
+        </div>
+    </div>
+
+    @Html.Partial("_Confirmalert")
+</div>
